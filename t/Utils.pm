@@ -11,7 +11,7 @@ our @EXPORT = qw(run_event_loop el_subtest);
 sub run_event_loop(&@) {
     my ( $code, %args ) = @_;
 
-    my $timeout = $args{timeout} // 10;
+    my $timeout = defined $args{timeout}? $args{timeout}: 10;
     my $cv = AE::cv;
     my $tmer;
     $tmer
@@ -19,7 +19,7 @@ sub run_event_loop(&@) {
     $code->($cv);
     $cv->recv;
 
-    return $tmer  ? 1: fail("Event loop failed");
+    return $tmer ? 1: fail("Event loop failed");
 }
 
 1;

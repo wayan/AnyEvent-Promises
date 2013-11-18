@@ -5,7 +5,6 @@ use Test::More;
 use t::Utils;
 
 use AnyEvent::Promises qw(deferred);
-use Data::Dump qw(pp);
 use AnyEvent;
 
 subtest then_returns_a_promise => sub {

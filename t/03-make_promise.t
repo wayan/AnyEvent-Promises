@@ -3,7 +3,6 @@ use warnings;
 
 use Test::More;
 use t::Utils;
-use Data::Dump qw(pp);
 
 BEGIN {
     use_ok( 'AnyEvent::Promises', 'make_promise', 'deferred' );

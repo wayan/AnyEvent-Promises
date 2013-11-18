@@ -1,5 +1,10 @@
 Revision history for AnyEvent::Promises
 
+0.02 Monday, Nov. 18th  2013 
+
+- removed the only occurence of // operator
+- removed forgotten use Data::Dump 
+
 0.01 Wednesday, Nov. 13th  2013 
 
 - initial release
