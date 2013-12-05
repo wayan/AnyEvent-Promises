@@ -178,6 +178,25 @@ See example:
 The behaviour of C<then> in JavaScript is more precisely described 
 here: L<http://promises-aplus.github.io/promises-spec/#the__method>.
 
+=item C<sync([$timeout])>
+
+    use AnyEvent::Promises qw(make_promise deferred);
+    
+    make_promise(8)->sync; # returns 8
+    make_promise(sub { die "Oops" })->sync; # dies with Oops
+
+    deferred()->promise->sync; # after 5 seconds dies with "TIMEOUT\n"
+    deferred()->promise->sync(10); # after 10 seconds dies with "TIMEOUT\n"
+    
+
+Runs the promise synchronously. Runs new event loop which is finished
+after $timeout (default 5) seconds or when the promise gets fulfilled 
+or rejected.
+
+If the promise gets fulfilled before timeout, returns the values of the promise.
+If the promise gets rejected before timeout, dies with the reason of the promise.
+Otherwise dies with C<TIMEOUT> string.
+
 =item C<values>
 
 If the promise was fulfilled, returns the values the underlying deferred object was resolved with.
@@ -290,7 +309,7 @@ there are important differences.
 AnyEvent::Promises does not work without running event loop 
 based on L<AnyEvent>. All C<$on_fulfilled>, C<$on_rejected> handlers 
 (arguments of C<then> method) are run in "next tick" of event loop
-as is required in 2.2.4 of the promises spec L< http://promises-aplus.github.io/promises-spec/#point-39 >.
+as is required in 2.2.4 of the promises spec L<< http://promises-aplus.github.io/promises-spec/#point-39 >>.
 
 There is also a crucial difference in C<$on_reject> handler behaviour
 (exception handling). Look at

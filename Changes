@@ -1,5 +1,10 @@
 Revision history for AnyEvent::Promises
 
+0.03 Thursday, Dec. 05th 2013
+
+- corrected POD
+- added $promise->sync 
+
 0.02 Monday, Nov. 18th  2013 
 
 - removed the only occurence of // operator
