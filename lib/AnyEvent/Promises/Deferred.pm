@@ -130,7 +130,7 @@ sub _promise_then {
 # runs the promise synchronously
 sub _promise_sync {
     my $this = shift;
-    my $timeout = shift // 5;
+    my $timeout = shift || 5;
 
     my $cv      = AE::cv;
     my $tm      = AE::timer $timeout, 0, sub { $cv->send("TIMEOUT\n") };
@@ -138,7 +138,7 @@ sub _promise_sync {
     my ( $error, @res ) = $cv->recv;
 
     die $error if $error;
-    return @res;
+    return wantarray? @res: $res[0];
 }
 
 sub _do_then {

@@ -21,7 +21,16 @@ for my $d ( deferred() ) {
     is_deeply(
         [ $d->promise->sync ],
         [ 'a', 'b', 'c' ],
-        "sync on fulfilled promise"
+        "sync on fulfilled promise - list context"
+    );
+}
+
+for my $d ( deferred() ) {
+    $d->resolve(qw(a b c));
+    is(
+        scalar($d->promise->sync), 
+        'a',
+        "sync on fulfilled promise - scalar context"
     );
 }
 
