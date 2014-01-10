@@ -1,5 +1,10 @@
 Revision history for AnyEvent::Promises
 
+0.05 Tuesday, Jan. 7th 2014
+
+- make_promise($promise) returns $promise
+- merge_promises() returns fulfilled promise
+
 0.04 Thursday, Dec. 11th 2013
 
 - correction of sync called in scalar context

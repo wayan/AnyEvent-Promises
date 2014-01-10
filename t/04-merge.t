@@ -61,6 +61,15 @@ subtest merge_some_rejected => sub {
     $merged->then( sub { push @progress, [@_]; } );
 };
 
+subtest merge_empty => sub {
+    my $values;
+    run_event_loop {
+        my $cv = shift;
+        merge_promises()->then(sub { $values = [@_]; $cv->send});
+    };
+    is_deeply($values, [], 'merge_promises() returns resolved promise');
+};
+
 done_testing();
 
 # vim: expandtab:shiftwidth=4:tabstop=4:softtabstop=0:textwidth=78:

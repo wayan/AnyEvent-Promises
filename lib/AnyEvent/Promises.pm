@@ -270,9 +270,13 @@ in order they are passed to C<merge_promises>
         return @_;    # yields ('A', undef, 3)
     );
 
+When called with empty list of promises returns promise which is resolved with empty list.
+
 =item C<make_promise($arg)>
 
 Shortcut for creating promises.
+
+If C<$arg> is a promise, then C<make_promise> returns it.
 
 If C<$arg> is a coderef, then C<make_promise> is equivalent to:
 
@@ -359,6 +363,8 @@ sub deferred {
 sub make_promise {
     my $arg = shift;
 
+    return $arg if is_promise($arg);
+
     my $d = deferred();
     if ( ref $arg && ref $arg eq 'CODE' ) {
         $d->resolve;
@@ -387,6 +393,10 @@ sub merge_promises {
                 $d->reject(@_);
             }
         );
+    }
+    if (!$left){
+        # is true only when @promises is empty
+        $d->resolve;
     }
     return $d->promise;
 }
