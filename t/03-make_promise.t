@@ -24,7 +24,7 @@ subtest make_promise_with_success => sub {
                 'promise created from value is fulfilled' );
             ok( $p2->is_pending,
                 'promise from code is pending, code was not evaluated yet' );
-            AE::postpone { $cv->send };
+            my $w; $w = AE::timer(0,0, sub {undef $w; $cv->send });
         }
     );
 };

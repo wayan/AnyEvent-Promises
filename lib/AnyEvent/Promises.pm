@@ -1,4 +1,5 @@
 package AnyEvent::Promises;
+
 use strict;
 use warnings;
 

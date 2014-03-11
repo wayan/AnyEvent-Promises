@@ -1,4 +1,5 @@
 package AnyEvent::Promises::Deferred;
+
 use strict;
 use warnings;
 
@@ -108,7 +109,7 @@ sub _promise_done {
         undef,
         sub {
             my $err = shift;
-            AE::postpone { die $err; }
+            die $err;
         }
     );
 }
@@ -141,13 +142,35 @@ sub _promise_sync {
     return wantarray? @res: $res[0];
 }
 
+# can be used with AnyEvent < 6 having no postpone 
+my $postpone;
+if (defined &AE::postpone){
+    $postpone = \&AE::postpone;
+}
+else {
+    my $POSTPONE_W;
+    my @POSTPONE;
+
+    my $postpone_exec = sub {
+        undef $POSTPONE_W;
+
+        &{ shift @POSTPONE } while @POSTPONE;
+    };
+
+    $postpone = sub {
+        push @POSTPONE, shift;
+        $POSTPONE_W ||= AE::timer( 0, 0, $postpone_exec );
+        ();
+    };
+};
+
 sub _do_then {
     my ( $this, $d, $on_fulfill, $on_reject ) = @_;
 
     my $rejected = $this->{state} == 2;
     my ( $value, $reason ) = @$this{qw(value reason)};
     if ( my $f = $rejected ? $on_reject : $on_fulfill ) {
-        AE::postpone {
+        $postpone->(sub {
             my @values = eval { $f->( $rejected ? $reason : @$value ) };
             if ( my $err = $@ ) {
                 $d->reject($err);
@@ -164,7 +187,7 @@ sub _do_then {
             else {
                 $d->resolve(@values);
             }
-        };
+        });
     }
     elsif ($rejected) {
         $d->reject($reason);

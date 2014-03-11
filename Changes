@@ -1,5 +1,9 @@
 Revision history for AnyEvent::Promises
 
+0.06 Tuesday, Mar. 11th 2014
+
+- if no AE::postpone available (old AnyEvent), uses its own (Svyatoslav Usachev)
+
 0.05 Tuesday, Jan. 7th 2014
 
 - make_promise($promise) returns $promise
